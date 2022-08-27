@@ -1,2 +1,64 @@
 #Donnjer Development Warp Skript
 #Project started on 27.08.2022
+
+options:
+	skript-path: /skript-warp/
+	skript-version: 0.1
+	p: Warp »
+
+command /warp [<string>]:
+	permission: warp.use
+	aliases: warps
+	trigger:
+		if arg-1 is set:
+			if {warp::point::%arg-1%} is set:
+				teleport player to {warp::point::%arg-1%}
+				send "{@p} Du wurdest erfolgreich teleportiert."
+			else:
+				send "{@p} Dieser Warp-Punkt existiert nicht."
+		else:
+			send "{@p} Unsere Warp-Punkte:"
+			loop {warp::point::*}:
+				send "➥ %loop-index%"
+			
+
+command /awarp [<string>] [<string>]:
+	permission: warp.admin
+	trigger:
+		send "Admin!"
+		
+		if arg-1 is not set:
+			send "Warp Menü"
+		
+		else if arg-1 is "reload":
+			send "{@p} Lade Skript neu..."
+			make console execute "skript reload {@skript-path}"
+		
+		else if arg-1 is "set":
+			if arg-2 is not set:
+				send "{@p} Es muss ein gültiger Name eingegeben werden!"
+			else:
+				if {warp::point::%arg-2%} is set:
+					send "{@p} Der Punkt %arg-2% existiert bereits!"
+				else:
+					set {warp::point::%arg-2%} to player's position #this for teleport usage; others for displaying reasons
+					set {warp::point::%arg-2%::world} to player's world
+					set {warp::point::%arg-2%::x} to player's x coordinate
+					set {warp::point::%arg-2%::y} to player's y coordinate
+					set {warp::point::%arg-2%::z} to player's z coordinate
+					send "{@p} Ein neuer Warp-Punkt wurde erstellt!"
+					send "{@p} %arg-2% bei %{warp::point::%arg-2%}%."
+		else if arg-1 is "delete":
+			if arg-2 is not set:
+				send "{@p} Es muss ein gültiger Name eingegeben werden!"
+			else:
+				if {warp::point::%arg-2%} is not set:
+					send "{@p} Diesen Warp-Punkt gibt es nicht."
+				else:
+					clear {warp::point::%arg-2%::*}
+					clear {warp::point::%arg-2%}
+					send "{@p} Der Warp-Punkt wurde gelöscht."
+		
+			
+		else:
+			send "Dieses Argument gibt es nicht."
