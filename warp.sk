@@ -25,10 +25,12 @@ command /warp [<string>]:
 command /awarp [<string>] [<string>]:
 	permission: warp.admin
 	trigger:
-		send "Admin!"
-		
 		if arg-1 is not set:
-			send "Warp Menü"
+			send "Admin Warp Menü"
+			send "Sub Commands:"
+			send "reload"
+			send "set"
+			send "delete"
 		
 		else if arg-1 is "reload":
 			send "{@p} Lade Skript neu..."
